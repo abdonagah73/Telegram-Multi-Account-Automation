@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj": {}
+    "D:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj": {}
   },
   "projects": {
-    "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj": {
+    "D:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj",
+        "projectUniqueName": "D:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj",
+        "projectPath": "D:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\عبد الرحمن\\.nuget\\packages\\",
-        "outputPath": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\obj\\",
+        "outputPath": "D:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\عبد الرحمن\\AppData\\Roaming\\NuGet\\NuGet.Config"
