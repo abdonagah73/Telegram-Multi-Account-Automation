@@ -25,14 +25,14 @@ builder.Services.AddSingleton<DispatcherQueue>();
 builder.Services.AddSingleton<MemberAdderService>();
 builder.Services.AddSingleton<MessagingService>();
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -45,9 +45,10 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
-app.UseCors("AllowAll");
+app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAll");
 
 app.MapControllers();
 app.MapHub<AutomationHub>("/hubs/automation");
