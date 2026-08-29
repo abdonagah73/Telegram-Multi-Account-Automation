@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\css\\theme-obsidian.css",
+      "PackagePath": "staticwebassets\\css\\theme-obsidian.css"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\js\\app-client.js",
+      "PackagePath": "staticwebassets\\js\\app-client.js"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\uploads\\06aae20c-97e0-4f30-b88e-334a0b83ea22_WhatsApp Image 2026-06-23 at 7.01.47 PM.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\06aae20c-97e0-4f30-b88e-334a0b83ea22_WhatsApp Image 2026-06-23 at 7.01.47 PM.jpeg"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\uploads\\4f36916d-26ce-418e-8b02-cb408c47e2d3_LOGO NAGA7.jpg",
+      "PackagePath": "staticwebassets\\uploads\\4f36916d-26ce-418e-8b02-cb408c47e2d3_LOGO NAGA7.jpg"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\uploads\\66599ca6-018b-45ca-9fb5-88b0d5abfbdb_ChatGPT Image 14 أغسطس 2026، 06_09_21 م.png",
+      "PackagePath": "staticwebassets\\uploads\\66599ca6-018b-45ca-9fb5-88b0d5abfbdb_ChatGPT Image 14 أغسطس 2026، 06_09_21 م.png"
+    },
+    {
+      "Id": "d:\\Telegram Multi-Account Automation\\TelegramAutomationApp\\Backend\\wwwroot\\uploads\\b3e7de9b-99fc-43e0-abae-4e1ae8d3dbb7_WhatsApp Image 2026-06-23 at 7.01.47 PM.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\b3e7de9b-99fc-43e0-abae-4e1ae8d3dbb7_WhatsApp Image 2026-06-23 at 7.01.47 PM.jpeg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Backend.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Backend.props",
+      "PackagePath": "build\\Backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Backend.props",
+      "PackagePath": "buildMultiTargeting\\Backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Backend.props",
+      "PackagePath": "buildTransitive\\Backend.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

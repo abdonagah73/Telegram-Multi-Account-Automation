@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Multi-Account Automation Platform</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/theme-obsidian.css">
+  <!-- SignalR JS Client -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Top Header Bar -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1 class="brand-title">Telegram Multi-Account Automation</h1>
+        <div class="brand-subtitle">Enterprise MTProto Workload Dispatcher</div>
+      </div>
+    </div>
+    <div class="system-status">
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span id="signalrStatus">SignalR: Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Left Sidebar: Telegram Accounts Manager -->
+    <aside class="accounts-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📱 Telegram Accounts</span>
+          <span id="accountCountBadge" style="font-size: 0.75rem; color: var(--accent-amber);">(0)</span>
+        </div>
+        <button type="button" class="btn btn-primary btn-icon" id="openAddAccountBtn" title="Add Account">+</button>
+      </div>
+
+      <div class="accounts-list" id="accountsList">
+        <!-- Dynamic accounts cards will render here -->
+        <div class="account-card" style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">
+          No accounts registered.<br>Click "+" to add an account.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Workspace: Automation Tools & Live Monitor -->
+    <section class="workspace">
+
+      <!-- Navigation Tabs -->
+      <nav class="tool-tabs">
+        <button type="button" class="tab-btn active" data-tab="adderTab">
+          👥 1. Group Member Adder
+        </button>
+        <button type="button" class="tab-btn" data-tab="messagingTab">
+          💬 2. Direct Messaging (DMs & Media)
+        </button>
+      </nav>
+
+      <!-- Tool 1: Group Member Adder Workspace -->
+      <div class="tool-card active" id="adderTab">
+        <div class="form-group">
+          <label class="form-label">
+            Target Group Username or Invite Link
+            <span class="form-hint">Public group username (@group) or full link</span>
+          </label>
+          <input type="text" id="adderGroupInput" class="form-input" placeholder="@my_target_group">
+        </div>
+
+        <!-- CSV / Excel Import Dropzone -->
+        <div class="form-group">
+          <label class="form-label">Import Target Clients (CSV or Excel Sheet)</label>
+          <div class="file-dropzone" id="adderFileDropzone">
+            <span style="font-size: 1.5rem;">📄</span>
+            <div class="dropzone-text">
+              Drag & Drop <span class="dropzone-highlight">CSV</span> or <span class="dropzone-highlight">Excel (.xlsx)</span> file here or <span class="dropzone-highlight">Browse</span>
+            </div>
+            <input type="file" id="adderFileInput" accept=".csv,.xlsx,.xls,.txt" style="display: none;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Target Users List (One per line or comma-separated)
+            <span class="form-hint">Format: @username or User ID</span>
+          </label>
+          <textarea id="adderUsernamesInput" class="form-textarea" placeholder="@john_doe&#10;@alice_smith&#10;@bob_builder"></textarea>
+        </div>
+
+        <div class="antiban-badge">
+          🛡️ Anti-Ban Protection Active: Dynamic random delay (8s - 20s + periodic human pauses)
+        </div>
+
+        <div class="actions-bar">
+          <button type="button" class="btn btn-primary" id="startAdderBtn">🚀 Start Adder Campaign</button>
+        </div>
+      </div>
+
+      <!-- Tool 2: Direct Messaging (DMs) Workspace -->
+      <div class="tool-card" id="messagingTab">
+        
+        <div class="chat-editor-grid">
+          
+          <!-- Left: DM Form Controls -->
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- CSV / Excel Import Dropzone -->
+            <div class="form-group">
+              <label class="form-label">Import Target Recipients (CSV / Excel Sheet)</label>
+              <div class="file-dropzone" id="msgFileDropzone">
+                <span style="font-size: 1.5rem;">📂</span>
+                <div class="dropzone-text">
+                  Drag & Drop <span class="dropzone-highlight">CSV</span> or <span class="dropzone-highlight">Excel (.xlsx)</span> file here or <span class="dropzone-highlight">Browse</span>
+                </div>
+                <input type="file" id="msgFileInput" accept=".csv,.xlsx,.xls,.txt" style="display: none;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                Target Recipients List (One per line or comma-separated)
+                <span class="form-hint">Format: @username</span>
+              </label>
+              <textarea id="msgUsernamesInput" class="form-textarea" placeholder="@john_doe&#10;@alice_smith"></textarea>
+            </div>
+
+            <!-- Image Upload Attachment -->
+            <div class="form-group">
+              <label class="form-label">Image Attachment (Optional)</label>
+              <div class="image-attachment-bar">
+                <input type="file" id="msgImageInput" accept="image/*" style="display: none;">
+                <button type="button" class="btn btn-secondary" id="triggerImageUploadBtn" style="padding: 0.4rem 0.85rem; font-size: 0.8rem;">📷 Select Photo</button>
+                <img id="imageThumb" class="image-thumb-preview" alt="Attachment Thumbnail">
+                <span id="imageFileName" style="font-size: 0.8rem; color: var(--text-muted); flex: 1;">No photo selected</span>
+                <button type="button" class="btn btn-danger btn-icon" id="clearImageBtn" style="display: none; padding: 0.25rem 0.5rem; font-size: 0.75rem;" title="Remove Photo">✕</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                Message Template Text
+                <span class="form-hint">Click tag to insert placeholder: <a href="#" id="insertUsernameTag" style="color: var(--accent-amber); text-decoration: underline;">{username}</a></span>
+              </label>
+              <textarea id="msgTemplateInput" class="form-textarea" placeholder="Hello {username}! Check out our special update here: https://example.com"></textarea>
+            </div>
+
+            <div class="antiban-badge">
+              🛡️ Anti-Ban Protection Active: Dynamic random delay (8s - 20s + periodic human pauses)
+            </div>
+
+            <div class="actions-bar">
+              <button type="button" class="btn btn-primary" id="startMsgBtn">🚀 Start DM Campaign</button>
+            </div>
+
+          </div>
+
+          <!-- Right: Live Telegram Chat Bubble Preview -->
+          <div class="telegram-preview-box">
+            <div class="preview-header">💬 Telegram Live Chat Preview</div>
+            <div class="telegram-bubble">
+              <img id="bubbleImage" class="bubble-image-preview" alt="Preview Photo">
+              <div id="bubbleText">Hello @username! Check out our special update here: https://example.com</div>
+              <div class="bubble-footer">
+                <span id="bubbleTime">12:45 PM</span>
+                <span style="color: var(--accent-cyan);">✓✓</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Live Campaign Progress Overview -->
+      <div class="progress-card">
+        <div class="progress-header">
+          <div style="font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>📊 Live Campaign Monitor:</span>
+            <span id="activeCampaignName" style="color: var(--accent-amber);">No Active Campaign</span>
+          </div>
+
+          <div class="actions-bar" style="margin-top: 0;">
+            <button type="button" class="btn btn-secondary" id="pauseCampaignBtn" disabled>⏸ Pause</button>
+            <button type="button" class="btn btn-primary" id="resumeCampaignBtn" disabled>▶ Resume</button>
+          </div>
+        </div>
+
+        <!-- Progress Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-val" id="statTotal">0</div>
+            <div class="stat-lbl">Total Targets</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val pending" id="statProcessed">0</div>
+            <div class="stat-lbl">Processed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val success" id="statSuccess">0</div>
+            <div class="stat-lbl">Success</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val failed" id="statFailed">0</div>
+            <div class="stat-lbl">Failed</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+
+        <!-- Real-Time Recipient Status Activity Feed -->
+        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-top: 0.5rem;">
+          📑 Live Recipient Dispatch Feed:
+        </div>
+        <div class="activity-feed-box">
+          <table class="activity-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">Time</th>
+                <th>Recipient</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 140px;">Account Used</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="activityFeedBody">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1rem;">
+                  Waiting for active campaign dispatch...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Terminal Live Logs Console -->
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-title">
+            <span>💻 Real-Time SignalR Output Terminal</span>
+          </div>
+          <div class="terminal-controls">
+            <button type="button" class="btn btn-secondary btn-icon" id="clearLogsBtn" title="Clear Console" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Clear Logs</button>
+          </div>
+        </div>
+        <div class="terminal-body" id="terminalConsole">
+          <div class="log-entry">
+            <span class="log-time">[System]</span>
+            <span class="log-level INFO">INFO</span>
+            <span class="log-msg">Industrial Terminal initialized. Listening for real-time events...</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Add Account Modal -->
+  <div class="modal-backdrop" id="addAccountModal">
+    <div class="modal-box">
+      <div class="modal-title">Register Telegram Account</div>
+      
+      <!-- Step 1: Initial Credentials -->
+      <div id="authStep1">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label">Phone Number (with Country Code)</label>
+          <input type="text" id="phoneInput" class="form-input" placeholder="+1234567890">
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label">API ID (from my.telegram.org)</label>
+          <input type="number" id="apiIdInput" class="form-input" placeholder="123456">
+        </div>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label">API Hash</label>
+          <input type="text" id="apiHashInput" class="form-input" placeholder="0123456789abcdef0123456789abcdef">
+        </div>
+        <div class="actions-bar" style="justify-content: flex-end;">
+          <button type="button" class="btn btn-secondary" id="closeAddAccountBtn">Cancel</button>
+          <button type="button" class="btn btn-primary" id="requestOtpBtn">Send Verification Code</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Verification Code (OTP) -->
+      <div id="authStep2" style="display: none;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Enter the verification code sent to your Telegram app:
+        </p>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label">Verification Code (OTP)</label>
+          <input type="text" id="otpCodeInput" class="form-input" placeholder="12345">
+        </div>
+        <div class="actions-bar" style="justify-content: flex-end;">
+          <button type="button" class="btn btn-primary" id="submitOtpBtn">Verify Code</button>
+        </div>
+      </div>
+
+      <!-- Step 3: 2FA Password -->
+      <div id="authStep3" style="display: none;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          This account requires Two-Factor Authentication (2FA) password:
+        </p>
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label">2FA Password</label>
+          <input type="password" id="twoFactorPassInput" class="form-input" placeholder="Your Password">
+        </div>
+        <div class="actions-bar" style="justify-content: flex-end;">
+          <button type="button" class="btn btn-primary" id="submit2FaBtn">Submit Password</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/app-client.js"></script>
+</body>
+</html>
